@@ -12,16 +12,16 @@ const BottomBar = ({ navigation }) => {
     <View style={styles.bottomBar}>
       <TouchableOpacity onPress={() => navigateTo('Home')}      
       >
-      <Icon name={'home'} style={route.name==="Home"? { color: '#324514' ,fontSize:40 }:{ color: 'black' ,fontSize:25 }} />
+      <Icon name={'home'} style={route.name==="Home"? { color: 'red' ,fontSize:40 }:{ color: 'black' ,fontSize:25 }} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigateTo('Cart')}>
-      <Icon name={'cart'} style={route.name==="Cart"? { color: '#324514' ,fontSize:40 }:{ color: 'black' ,fontSize:25 }} />
+      <Icon name={'cart'} style={route.name==="Cart"? { color: 'red' ,fontSize:40 }:{ color: 'black' ,fontSize:25 }} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigateTo('Products')}>
-      <Icon name={'cube'} style={route.name==="Products"? { color: '#324514' ,fontSize:40 }:{ color: 'black' ,fontSize:25 }} />
+      <Icon name={'cube'} style={route.name==="Products"? { color: 'red' ,fontSize:40 }:{ color: 'black' ,fontSize:25 }} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigateTo('Profile')}>
-      <Icon name={'account'} style={route.name==="Profile"? { color: '#324514' ,fontSize:40 }:{ color: 'black' ,fontSize:25 }} />
+      <Icon name={'account'} style={route.name==="Profile"? { color: 'red' ,fontSize:40 }:{ color: 'black' ,fontSize:25 }} />
       </TouchableOpacity>
     </View>
   );
@@ -30,6 +30,10 @@ const BottomBar = ({ navigation }) => {
 const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: 'row',
+    position:"absolute",
+    bottom: 0,
+    width:"100%",
+    zIndex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: 'white',

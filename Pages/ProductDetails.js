@@ -1,20 +1,32 @@
-import { StyleSheet, Text, View, Image,ScrollView,TouchableOpacity,TextInput } from 'react-native';
+import { StyleSheet, Text, View, Image,ScrollView,TouchableOpacity } from 'react-native';
 import Stars from 'react-native-stars';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import NumericInput from 'react-native-numeric-input'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import BottomBar from '../Components/BottomNavBar';
 
 export default function ProductDetails({navigation}) {
   const [productCount,setProductCount]=useState(0);
-
   const handleNumberChange = (value) => {
     setProductCount(value);
   };
 
+  async function saveData(){
+    await AsyncStorage.setItem("test","test");
+  }
+  
+  useEffect(() => {
+
+    saveData()
+
+  },[]);
+
+
+
   return (
-    <>
+    <View style={{height:'100%', backgroundColor:"#f2f6f9"}}>
     <ScrollView contentContainerStyle={styles.container}>
         <Icon name={'chevron-left'} style={{fontSize:55,color:"black",position:"absolute",left:5,top:14,zIndex:1}} onPress={() => navigation.navigate("Products")}/>
       <Image
@@ -95,6 +107,8 @@ export default function ProductDetails({navigation}) {
       <Text style={{ paddingHorizontal: 13, fontSize: 14,alignSelf:"flex-start" }}>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum sapiente accusamus harum corrupti molestiae vitae. Repellendus sapiente odio nesciunt. Velit ut inventore ad non repellendus dolorem laboriosam voluptas, esse tempora.
       </Text>
+
+
       <View style={styles.space} />
 
       <View   style={{
@@ -165,21 +179,22 @@ style={{
 
             />
 <TouchableOpacity
-style={{marginLeft:3}}
+style={{marginLeft:10,width:"70%"}}
 >
-  <Text style={{backgroundColor:"black", borderRadius:12, paddingVertical:10,paddingHorizontal:75, color:"white", fontWeight:"bold" ,alignSelf:"center" }}>Add to Cart</Text>
+  <Text style={{backgroundColor:"black", borderRadius:12, paddingVertical:10,width:"100%" ,color:"white", fontWeight:"bold" ,alignSelf:"center",textAlign:"center" }}>Add to Cart</Text>
 </TouchableOpacity>
 </View>
 <View style={styles.space} />
     </ScrollView>
 
     <BottomBar navigation={navigation}/>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    paddingBottom: 50,
     backgroundColor: '#f2f6f9',
     alignItems: 'center',
   },
