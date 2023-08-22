@@ -1,0 +1,55 @@
+{
+    "img":{
+ 
+"main_img":{
+"url":"https://i.pinimg.com/564x/6f/bc/72/6fbc720b942da444cdd6872e6caf0a4c.jpg"
+},
+"cart_img":{
+"url":"https://cdn-icons-png.flaticon.com/512/2838/2838838.png"
+},
+
+"last_img":{
+
+    "url":"https://i.pinimg.com/564x/37/4b/69/374b692e2282d295a2343799b63dc303.jpg"
+
+}
+},
+"img_Categories":[
+{
+"url":"https://i.pinimg.com/564x/ad/6a/dc/ad6adc133782bd20b8c52003ffa04573.jpg",
+"description":"Chair"
+
+},
+{
+
+    "url":"https://i.pinimg.com/564x/bc/4e/03/bc4e03f1be648bdebd0407845777d5ce.jpg",
+    "description":"Sofa"
+
+},{
+    "url":"https://i.pinimg.com/564x/18/6b/01/186b01e62d8b2287dbcffe21a4961ed2.jpg",
+    "description":"Dinner"
+
+},{
+    "url":"https://i.pinimg.com/564x/49/3e/de/493ede1da5ef8e6e3220c4ae62aeedeb.jpg",
+    "description":"Drawers"
+
+}],
+"img_Trendings":[{
+
+"url":"https://i.pinimg.com/564x/a0/5a/3b/a05a3b0d399ff603c8c0eb06fdd45ba8.jpg",
+"description":"modern sofa \n design ideas stylish",
+"price":"50.00"
+},
+
+{
+
+    "url":"https://i.pinimg.com/564x/3d/26/9e/3d269eff814e95b73a76939cbff28836.jpg",
+    "description":"Sofasl New Light chair",
+    "price":"29.00"
+},
+{
+    "url":"https://i.pinimg.com/564x/41/92/11/4192118947da973c40723c43583c2597.jpg",
+    "description":"Armchair Konna Green",
+    "price":"47.00"
+
+}]}
