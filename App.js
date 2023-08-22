@@ -5,7 +5,7 @@ import Cart from './Pages/Cart';
 import { useEffect, useState } from 'react';
 import { initDB,getProducts,addProduct } from './Database';
 import { Text,Button,FlatList,View } from 'react-native';
-
+import Thankyou from './Pages/Thankyou';
 
 
 const Stack = createNativeStackNavigator();
@@ -72,9 +72,7 @@ const renderProduct = ({ item }) => (
       <Stack.Screen name="Profile" component={ProductDetails}/> 
       <Stack.Screen name="Cart" component={Cart} options={{ headerShown: false }}/> 
       <Stack.Screen name="Payment" component={ProductDetails}  options={{ headerShown: false }}/> 
-      <Stack.Screen name="Thankyou" component={ProductDetails}  options={{ headerShown: false }}/>
-      <Stack.Screen name="Login" component={ProductDetails}  options={{ headerShown: false }}/> 
-
+      <Stack.Screen name="Thankyou" component={Thankyou}  options={{ headerShown: false }}/> 
       </Stack.Navigator>
     </NavigationContainer>
     </>
