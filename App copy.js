@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProductDetails from './Pages/ProductDetails';
 import Cart from './Pages/Cart';
-import Thankyou from './Pages/Thankyou';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -19,7 +19,7 @@ function App() {
       <Stack.Screen name="Profile" component={ProductDetails}/> 
       <Stack.Screen name="Cart" component={Cart} options={{ headerShown: false }}/> 
       <Stack.Screen name="Payment" component={ProductDetails}  options={{ headerShown: false }}/> 
-      <Stack.Screen name="Thankyou" component={Thankyou}  options={{ headerShown: false }}/> 
+      <Stack.Screen name="Thankyou" component={ProductDetails}  options={{ headerShown: false }}/> 
       </Stack.Navigator>
     </NavigationContainer>
   );
