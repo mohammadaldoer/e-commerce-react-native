@@ -1,5 +1,5 @@
 import { createContext, useEffect,useState } from "react";
-import { initDB,getProducts,addProducts } from '../Database';
+import { initDB,getProducts,addProducts,deleteProducts,createUserTable,createOrdersTable } from '../Database';
 
 
 export const productContext = createContext();
@@ -13,15 +13,20 @@ export const ProductContextProvider = ({ children }) => {
         getProducts()
           .then((result) => {
             setAllProducts(result);
-            console.log(result);
           }).then(()=>{
             if (allProducts.length===0){
+              deleteProducts().then(()=>{
+                initDB()
+              })
+              .then(()=>{
                 addProducts()
+
+              })
                 .then(()=>{
                     getProducts()
                     .then((result) => {
                       setAllProducts(result);
-                      console.log(result);})
+                      ;})
                 })
             }
 
@@ -34,9 +39,18 @@ export const ProductContextProvider = ({ children }) => {
     
       useEffect(()=>{
         initDB()
+        .then(()=>{
+          createUserTable();
+          console.log("Products");
+          console.log("Users");
+
+        }).then(()=>{
+          createOrdersTable()
+          console.log("Orders");
+
+        })
  .then(()=>{
             loadProducts();
-            console.log("success")
             })
         .catch((err)=>{
           console.log(err)

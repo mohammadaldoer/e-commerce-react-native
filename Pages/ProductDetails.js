@@ -10,16 +10,21 @@ import Stars from "react-native-stars";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import NumericInput from "react-native-numeric-input";
 import { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import useProducts from "../hooks/useProducts";
 import BottomBar from "../Components/BottomNavBar";
 import { useRoute } from "@react-navigation/native";
+import useUsers from '../hooks/useUser';
+import { addOrder } from "../Database";
 
 export default function ProductDetails({ navigation }) {
   const { allProducts, setAllProducts } = useProducts();
+  const { userInfo, setUserInfo}=useUsers();
+
   const [product, setProduct] = useState();
   const [loading, setLoading] = useState(true);
   const [selectedColor, setSelctedColor] = useState("");
+  const [productCount, setProductCount] = useState(0);
+
   const route = useRoute();
   const productId = route.params?.id;
 
@@ -45,11 +50,27 @@ export default function ProductDetails({ navigation }) {
     }
   }, [allProducts]);
 
-  const [productCount, setProductCount] = useState(0);
   const handleNumberChange = (value) => {
     setProductCount(value);
   };
 
+  addToCart=()=>{
+    addOrder(product.product_name,productCount,product.Price,selectedColor,userInfo.id,productId)
+    .then(()=>{
+      alert("Order added successfully")
+    }).catch((error) => {
+      alert("Failed to add order")
+      console.log('Error:', error);
+    });
+  }
+
+  handleCartChange = ()=>{
+    if (!selectedColor || !productCount){
+      alert("Please select a color and the amount");
+    }else{
+      addToCart();
+    }
+  }
   return (
     <>
       {loading ? (
@@ -288,7 +309,9 @@ export default function ProductDetails({ navigation }) {
                 textColor="black"
                 iconStyle={{ color: "black" }}
               />
-              <TouchableOpacity style={{ marginLeft: 10, width: "70%" }}>
+              <TouchableOpacity style={{ marginLeft: 10, width: "70%" }}
+              onPress={handleCartChange}
+              >
                 <Text
                   style={{
                     backgroundColor: "black",

@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import { Text,Button,FlatList,View } from 'react-native';
-import { getProducts,addProduct,Register,getUsers } from '../Database';
+import { getProducts,addProduct,register,getUsers,login,deleteUsers } from '../Database';
 import useProducts from '../hooks/useProducts';
+import useUsers from '../hooks/useUser';
 
-const Testingdb = () => {
-    const {allProducts, setAllProducts} = useProducts(); 
+const Testingdb = ({navigation}) => {
+    const [allUsers, setAllUsers] = useState([]);
+    const [error,setError]=useState(null);
+    const { userInfo, setUserInfo}=useUsers();
 
-
-    const loadProducts = () => {
-        getProducts()
+    const loadUsers = () => {
+      getUsers()
           .then((result) => {
-            setAllProducts(result);
+            setAllUsers(result);
             console.log(result)
           })
           .catch((error) => {
@@ -19,39 +21,69 @@ const Testingdb = () => {
       };
 
       useEffect(() => {
-        loadProducts()
+        loadUsers()
     
     },[])
 
-    const handleAddProduct = () => {
-        addProduct()
+    useEffect(() => {
+      if(error){
+        alert(error);
+      }
+  },[error])
+
+
+  handleLogout=async()=>{
+    await setUserInfo(null); 
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Register' }],
+    });
+
+  }
+
+    const handleRegister = () => {
+      register("test","123","test",123)
           .then((affectedRows) => {
-            console.log(`${affectedRows} row(s) added`);
-            loadProducts(); // Refresh the product list
+            loadUsers(); // Refresh the product list
           })
           .catch((error) => {
+            setError(error);
+
             console.log('Error adding product:', error);
           });
       };
 
-
+      const handleLogin = () => {
+        // login("test","123")
+        deleteUsers()
+            .then((result) => {
+              alert(result.id);
+              console.log("test")
+            })
+            .catch((error) => {
+              console.log('Error adding product:', error);
+            });
+        };
     
     const renderProduct = ({ item }) => (
         <View>
             <Text>
               {item.id}
             </Text>
-            <Text>{item.product_name}</Text>
-            <Text>{item.Category}</Text>
-          <Text>{item.product_description}</Text>
-          <Text>{item.Price}</Text>
+            <Text>{item.username}</Text>
+            <Text>{item.email}</Text>
+          <Text>{item.password}</Text>
+          <Text>{item.phone}</Text>
         </View>
       );
   return (
 <>
-<Button title='add' onPress={handleAddProduct}></Button>
+<Button title='register' onPress={handleRegister}></Button>
+<Button title='login' onPress={handleLogin}></Button>
+<Button title='logout' onPress={handleLogout}></Button>
+
      <FlatList
-        data={allProducts}
+        data={allUsers}
         renderItem={renderProduct}
         keyExtractor={(item) => item.id.toString()}
         // keyExtractor={(item,index) => index++}

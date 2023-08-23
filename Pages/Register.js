@@ -1,18 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity  } from 'react-native';
 import CheckBox from 'expo-checkbox';
+import { register,login } from '../Database';
+import useUsers from '../hooks/useUser';
 
 export default function Register({navigation}) {
     const [isChecked, setIsChecked] = useState(false);
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("");
+    const [phone ,setPhone]= useState(0);
+    const { userInfo, setUserInfo}=useUsers();
+
+
+    // useEffect(()=>{
+    //   if (userInfo) {
+    //     navigation.navigate("Home");
+    //   }
+
+    // },[userInfo, navigation])
+
+    const handleRegister = () => {
+      register(username,password,email,phone)
+          .then(()=>{
+            login(email,password).then((result) => {
+              setUserInfo(result);
+            }).then(()=>{
+              navigation.navigate("Home");
+            })
+          })
+          .catch((error) => {
+            alert("Email already in use")
+            console.log('Error:', error);
+          });
+      };
 
   const handleRegisterPress = () => {
-    // Your registration logic here
-    navigation.navigate("Home");
-    console.log("Registration button pressed");
+    if(!username || !password || !phone || !email || !isChecked){
+      alert("All fields are required")
+    }else{
+      handleRegister()
+
+    }
+
   };
 
   const handleTermsPress = () => {
-    // Handle the terms and conditions click
+    alert("agree")
     console.log("Terms and Conditions clicked");
   };
 
@@ -23,17 +57,28 @@ export default function Register({navigation}) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Create an Account</Text>
+      <Text style={styles.heading}    
+    >Create an Account</Text>
       <Text>Enter Your Details Information</Text>
+
+      <Text style={styles.label}>Username*</Text>
+      <TextInput
+      onChangeText={(text)=>{setUsername(text)}}
+        style={styles.textInput}
+        placeholder="Enter your username"
+      />
 
       <Text style={styles.label}>Email Address*</Text>
       <TextInput
+            onChangeText={(text)=>{setEmail(text)}}
         style={styles.textInput}
         placeholder="Enter your email"
       />
 
+
       <Text style={styles.label}>Password*</Text>
       <TextInput
+        onChangeText={(text)=>{setPassword(text)}}
         style={styles.textInput}
         placeholder="Enter your password"
         secureTextEntry={true}
@@ -41,15 +86,17 @@ export default function Register({navigation}) {
 
       <Text style={styles.label}>Mobile Number*</Text>
       <TextInput
+        keyboardType="numeric"
+        onChangeText={(text)=>{
+          const numericText = text.replace(/[^0-9]/g, "");
+          setPhone(numericText);
+        }}
+        value={phone}
         style={styles.textInput}
         placeholder="Enter your Mobile Number"
       />
 
-      <Text style={styles.label}>Address*</Text>
-      <TextInput
-        style={styles.textInput}
-        placeholder="Enter your Address"
-      />
+
 
 <View style={{flexDirection:"row"}}>
     <CheckBox
@@ -70,6 +117,16 @@ export default function Register({navigation}) {
         onPress={handleRegisterPress}
       >
         <Text style={styles.registerButtonText}>Register</Text>
+      </TouchableOpacity>
+
+
+      <TouchableOpacity
+      style={{flexDirection:"row",justifyContent:"center",marginTop:12}}
+        onPress={()=>{navigation.navigate("Login")}}
+      >
+        <Text >Have an Account? </Text>
+        <Text style={{fontWeight:"bold",textDecorationLine:"underline"}}>LOGIN</Text>
+
       </TouchableOpacity>
 
     </View>

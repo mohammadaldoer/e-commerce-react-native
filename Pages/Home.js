@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, TextInput, Image ,ScrollView ,TouchableOpacity} from 'react-native';
 import json from '../Components/data.json'
 import BottomBar from '../Components/BottomNavBar';
+import useUsers from '../hooks/useUser';
 
 // Create a screen component
 function Categories_contain (){
@@ -62,6 +63,11 @@ function Header() {
   }
 
 function HomeScreen({ navigation }) {
+  const [userData,setUserData]=useState("");
+  const { userInfo, setUserInfo}=useUsers();
+
+
+
   return (
 <>
 <Header/>
@@ -120,7 +126,7 @@ function HomeScreen({ navigation }) {
     
       <Text style={[styles.text, {  fontSize: 20},{margin:10}]}>Upto 30% Off*</Text>
      <View style={styles.Button}>
-     <TouchableOpacity style={[styles.button,{marginLeft:20}]}>
+     <TouchableOpacity style={[styles.button,{marginLeft:20}]} onPress={()=>{navigation.navigate("Products")}}>
       <Text  style={[ {  fontSize: 20}]}>Shop</Text>
     </TouchableOpacity>
       </View>

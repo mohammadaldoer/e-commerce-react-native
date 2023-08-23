@@ -2,57 +2,111 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('E_commerce.db');
 
+
+
 export const initDB = () => {
   return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `
-
-        CREATE TABLE IF NOT EXISTS Products (
+    db.transaction(
+      (tx) => {
+        tx.executeSql(
+          `
+          CREATE TABLE IF NOT EXISTS Products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             product_name TEXT NOT NULL,product_description TEXT NOT NULL,
             Price FLOAT NOT NULL,Colors TEXT NOT NULL,Rating FLOAT NOT NULL,Image TEXT NOT NULL,Category TEXT NOT NULL);
 
-        `,
-        [],
-        () => {
-          resolve();
-          tx.executeSql(
-            `
-            CREATE TABLE IF NOT EXISTS users (
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-               username TEXT NOT NULL,password TEXT NOT NULL,
-               email TEXT NOT NULL UNIQUE);
-            
-            `
-          ),[],
-          ()=>{
+          `,
+          [],
+          () => {
             resolve();
-
-            tx.executeSql(`
-            
-            CREATE TABLE IF NOT EXISTS Orders (
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              product_name TEXT NOT NULL,
-              Amount INTEGER NOT NULL,
-              Price FLOAT NOT NULL,
-              TOTAL_PRICE FLOAT AS (Price * Amount) NOT NULL,
-              Color TEXT NOT NULL,
-              user_id INTEGER,
-              product_id INTEGER,
-              
-              FOREIGN KEY (user_id) REFERENCES Users(id),
-              FOREIGN KEY (product_id) REFERENCES Products(id)
-              );`),[],()=>{
-                resolve();
-              },(_,error)=>{
-                reject(error);
-              }
-              
-
-          },(_,error)=>{
+          },
+          (_, error) => {
             reject(error);
           }
+        );
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
+};
+
+
+
+
+
+export const createUserTable = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(
+      (tx) => {
+        tx.executeSql(
+          `
+          CREATE TABLE IF NOT EXISTS Users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+             username TEXT NOT NULL,password TEXT NOT NULL,phone INTEGER NOT NULL,
+             email TEXT NOT NULL UNIQUE);
+          `,
+          [],
+          () => {
+            resolve("users");
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
+};
+
+
+export const createOrdersTable = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(
+      (tx) => {
+        tx.executeSql(
+          `
+          CREATE TABLE IF NOT EXISTS Orders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_name TEXT NOT NULL,
+            Amount INTEGER NOT NULL,
+            Price FLOAT NOT NULL,
+            Color TEXT NOT NULL,
+            user_id INTEGER,
+            product_id INTEGER,
+            
+            FOREIGN KEY (user_id) REFERENCES Users(id),
+            FOREIGN KEY (product_id) REFERENCES Products(id)
+            );
+          `,
+          [],
+          () => {
+            resolve("orders");
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
+};
+
+export const deleteProducts = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'drop table IF EXISTS Products',
+        [],
+        (_, result) => {
+          resolve(result.rows._array);
         },
         (_, error) => {
           reject(error);
@@ -61,7 +115,6 @@ export const initDB = () => {
     });
   });
 };
-
 
 
 export const getProducts = () => {
@@ -135,15 +188,110 @@ export const addProducts = () => {
     });
   };
 
-
-  export const Register = (username,password,email) => {
+  export const deleteUsers = () => {
     return new Promise((resolve, reject) => {
       db.transaction((tx) => {
         tx.executeSql(
-          'INSERT into Users (username,password,email) values (?,?,?);',
-          [username,password,email],
+          `DELETE FROM Users;
+          `,
+          [],
           (_, result) => {
             resolve(result.rows._array);
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
+      });
+    });
+  };
+
+
+  export const register = (username,password,email,phone) => {
+    return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'INSERT into Users (username,password,email,phone) values (?,?,?,?);',
+          [username,password,email,phone],
+          () => {
+            resolve();
+          },
+          (_, error) => {
+            reject(error);
+          }
+          
+        );
+      });
+    });
+  };
+
+  export const login = (email,password) => {
+    return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'SELECT username,email,id,phone FROM Users where email = (?) AND password = (?)',
+          [email,password],
+          (_, result) => {
+            if (result.rows._array.length === 0) {
+              resolve("email or password is wrong");
+            }else{
+              resolve(result.rows._array[0]);
+            }
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
+      });
+    });
+  };
+
+  export const addOrder = (product_name,Amount,Price,Color,user_id,product_id) => {
+    return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          `
+          insert into Orders (product_name,Amount,Price,Color,user_id,product_id) values (?,?,?,?,?,?);
+          `,
+          [product_name,Amount,Price,Color,user_id,product_id],
+          () => {
+            resolve();
+          },
+          (_, error) => {
+            reject(error);
+          }
+          
+        );
+      });
+    });
+  };
+
+
+  export const getOrders = (user_id) => {
+    return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'SELECT id,product_name,Amount,Price,Color,product_id FROM Orders where user_id = (?)',
+          [user_id],
+          (_, result) => {
+            resolve(result.rows._array);
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
+      });
+    });
+  };
+
+  export const deleteOrder = (order_id) => {
+    return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'delete from Orders where id = (?);',
+          [order_id],
+          () => {
+            resolve();
           },
           (_, error) => {
             reject(error);
